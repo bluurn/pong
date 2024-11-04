@@ -22,8 +22,30 @@ struct Ball {
   }
 };
 
+struct Paddle {
+  Paddle(Vector2 _pos, Vector2 _size, float _speed)
+      : pos(_pos), size(_size), speed(_speed) {}
+
+  Vector2 pos;
+  Vector2 size;
+  float speed;
+
+  void draw() { DrawRectangleV(pos, size, WHITE); }
+
+  void update() {
+    if (IsKeyUp(KEY_DOWN)) {
+      pos.y -= speed;
+    }
+
+    if (IsKeyUp(KEY_UP)) {
+      pos.y += speed;
+    }
+  }
+};
+
 int main(int argc, char **argv) {
   Ball ball(Vector2{100, 100}, Vector2{5, 5}, 20);
+  Paddle player(Vector2{10, 200}, Vector2{10, 200}, 20);
 
   SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_ALWAYS_RUN);
   SetTargetFPS(60);
@@ -33,6 +55,8 @@ int main(int argc, char **argv) {
     BeginDrawing();
 
     ClearBackground(BLACK);
+    player.draw();
+    player.update();
     ball.draw();
     ball.update();
     EndDrawing();
