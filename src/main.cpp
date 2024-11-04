@@ -33,13 +33,15 @@ struct Paddle {
   void draw() { DrawRectangleV(pos, size, WHITE); }
 
   void update() {
-    if (IsKeyUp(KEY_DOWN)) {
+    if (IsKeyUp(KEY_DOWN))
       pos.y -= speed;
-    }
-
-    if (IsKeyUp(KEY_UP)) {
+    if (IsKeyUp(KEY_UP))
       pos.y += speed;
-    }
+
+    if (pos.y <= 0)
+      pos.y = 0;
+    if (pos.y + size.y >= GetScreenHeight())
+      pos.y = GetScreenHeight() - size.y;
   }
 };
 
@@ -55,10 +57,12 @@ int main(int argc, char **argv) {
     BeginDrawing();
 
     ClearBackground(BLACK);
+
     player.draw();
     player.update();
     ball.draw();
     ball.update();
+
     EndDrawing();
   }
 
