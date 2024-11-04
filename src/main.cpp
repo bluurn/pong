@@ -45,6 +45,6 @@ int main(int argc, char ** argv)
 
   CloseWindow();
 
-  return EXIT_SUCCESS;
+  return 0;
 }
 
