@@ -1,31 +1,45 @@
-#include <iostream>
 #include <raylib.h>
-
+#include <raymath.h>
 
 struct Ball: Vector2 {
-  Ball(float _x, float _y): Vector2{.x = _x, .y = _y } {}
-  Ball(Vector2 pos): Vector2(pos) {}
+  Ball(Vector2 _pos, Vector2 _speed, float _radius): pos(_pos), radius(_radius), speed(_speed) {}
+  
+  Vector2 pos;
+  Vector2 speed;
+  float radius;
 
   void draw() 
   {
-    DrawCircleV(static_cast<Vector2>(*this), 20, WHITE);
+    DrawCircleV(pos, radius, WHITE);
+  }
+
+  void update()
+  {
+    if(pos.y + radius >= GetScreenHeight() || pos.y - radius <= 0) {
+      speed.y *= -1;
+    } else if (pos.x + radius >= GetScreenWidth() || pos.x - radius <= 0) {
+      speed.x *= -1;
+    }
+
+    pos = Vector2Add(pos, speed);
   }
 };
 
 
 int main(int argc, char ** argv)
 {
-  Ball ball(100, 100);
-  std::cout << "Hello Pong!" << std::endl;
+  Ball ball(Vector2{100, 100}, Vector2{5, 5}, 20);
 
   SetConfigFlags(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_ALWAYS_RUN);
   SetTargetFPS(60);
-  InitWindow(800, 600, "Pong");
+  InitWindow(1024, 800, "Pong");
 
   while(!WindowShouldClose()) {
     BeginDrawing();
+
     ClearBackground(BLACK);
     ball.draw();
+    ball.update();
     EndDrawing();
   }
 
