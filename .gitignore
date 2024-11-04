@@ -1,0 +1,7 @@
+*.cmake
+.clangd
+CMakeCache.txt
+CMakeFiles/
+Makefile
+_deps/
+xoxo
