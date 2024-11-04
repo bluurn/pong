@@ -1,7 +1,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-struct Ball: Vector2 {
+struct Ball {
   Ball(Vector2 _pos, Vector2 _speed, float _radius): pos(_pos), radius(_radius), speed(_speed) {}
   
   Vector2 pos;
