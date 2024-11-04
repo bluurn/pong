@@ -87,22 +87,21 @@ struct CPU : public Paddle {
   }
 };
 
-enum GameState {
-  INIT,
-  PAUSED,
-  PLAYER_WON,
-  CPU_WON,
-  PLAY,
-};
-
 struct Game {
+  enum struct State {
+    INIT = 0,
+    PAUSED,
+    PLAYER_WON,
+    CPU_WON,
+    PLAY,
+  };
   Game(Paddle &_player, CPU &_cpu, Ball &_ball)
-      : player(_player), cpu(_cpu), ball(_ball) {}
+      : player(_player), cpu(_cpu), ball(_ball), state(State::INIT) {}
 
   Paddle &player;
   CPU &cpu;
   Ball &ball;
-  GameState GameState = INIT;
+  State state;
 
   void draw() {
     player.draw();
@@ -115,12 +114,12 @@ struct Game {
 
   void react() {
     if (IsKeyPressed(KEY_P))
-      GameState = PAUSED;
+      state = State::PAUSED;
 
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN))
-      GameState = PLAY;
+      state = State::PLAY;
 
-    if (GameState != PLAY)
+    if (state != State::PLAY)
       return;
 
     checkWinConditions();
@@ -139,11 +138,11 @@ struct Game {
   void checkWinConditions() {
     if (ball.pos.x + ball.radius >= SCREEN_W) {
       player.score++;
-      GameState = PLAYER_WON;
+      state = State::PLAYER_WON;
       reset();
     } else if (ball.pos.x - ball.radius <= 0) {
       cpu.score++;
-      GameState = CPU_WON;
+      state = State::CPU_WON;
       reset();
     }
   }
@@ -159,29 +158,29 @@ struct Game {
   }
 
   void drawHint() {
-    switch (GameState) {
+    switch (state) {
 
-    case INIT: {
-      DrawText("Welcome! Use arrows to move paddle", SCREEN_W / 2, SCREEN_H - 2 * FONT_SIZE,
-               FONT_SIZE, DARKGRAY);
+    case State::INIT: {
+      DrawText("Welcome! Use arrows to move paddle", SCREEN_W / 2,
+               SCREEN_H - 2 * FONT_SIZE, FONT_SIZE, DARKGRAY);
       break;
     }
-    case PAUSED: {
-      DrawText("Paused! Move paddle to play", SCREEN_W / 2, SCREEN_H - 2 * FONT_SIZE,
-               FONT_SIZE, DARKGRAY);
+    case State::PAUSED: {
+      DrawText("Paused! Move paddle to play", SCREEN_W / 2,
+               SCREEN_H - 2 * FONT_SIZE, FONT_SIZE, DARKGRAY);
       break;
     }
-    case PLAYER_WON: {
+    case State::PLAYER_WON: {
       DrawText("You won! Move paddle to play", SCREEN_W / 2,
                SCREEN_H - 2 * FONT_SIZE, FONT_SIZE, DARKGRAY);
       break;
     }
-    case CPU_WON: {
+    case State::CPU_WON: {
       DrawText("CPU won! Move paddle to play", SCREEN_W / 2,
                SCREEN_H - 2 * FONT_SIZE, FONT_SIZE, DARKGRAY);
       break;
     }
-    case PLAY:
+    case State::PLAY:
       break;
     }
   }
