@@ -14,15 +14,15 @@ int main(int argc, char **argv) {
 
   Player player(PLAYER_INIT_POS, PADDLE_SIZE, PLAYER_SPEED);
   CPU cpu(CPU_INIT_POS, PADDLE_SIZE, CPU_SPEED);
-  Ball ball(BALL_INIT_POS, BALL_SPEED, BALL_RADIUS);
+  Ball ball(SCREEN_CENTER, BALL_SPEED, BALL_RADIUS);
 
   Game game(player, cpu, ball);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(BLACK);
-    game.draw();
     game.react();
+    game.draw();
     EndDrawing();
   }
 

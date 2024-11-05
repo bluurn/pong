@@ -25,4 +25,6 @@ struct Game {
   void drawPlayerScore();
   void drawCPUScore();
   void drawHint();
+  void drawLineInTheMiddle();
+  void drawCircleInTheMiddle();
 };

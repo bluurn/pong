@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "constants.hpp"
+#include "raylib.h"
 
 Game::Game(Paddle &_player, CPU &_cpu, Ball &_ball)
     : player(_player), cpu(_cpu), ball(_ball), state(State::INIT) {}
@@ -14,16 +15,20 @@ void Game::react() {
   if (state != State::PLAY)
     return;
 
-  checkWinConditions();
   player.update();
   ball.update(player, cpu);
   cpu.update(ball);
+  checkWinConditions();
 }
 
 void Game::draw() {
+  drawLineInTheMiddle();
+  drawCircleInTheMiddle();
+
   player.draw();
   ball.draw();
   cpu.draw();
+
   drawPlayerScore();
   drawCPUScore();
   drawHint();
@@ -31,7 +36,7 @@ void Game::draw() {
 
 void Game::reset() {
   ball.speed.x *= -1;
-  ball.pos = BALL_INIT_POS;
+  ball.pos = SCREEN_CENTER;
   player.pos = PLAYER_INIT_POS;
   cpu.pos = CPU_INIT_POS;
 }
@@ -84,4 +89,12 @@ void Game::drawHint() {
   case State::PLAY:
     break;
   }
+}
+
+void Game::drawLineInTheMiddle() {
+  DrawLine(SCREEN_W / 2, 0, SCREEN_W / 2, SCREEN_H, DARKGRAY);
+}
+
+void Game::drawCircleInTheMiddle() {
+  DrawRing(SCREEN_CENTER, 99, 100, 0, 360, 1, DARKGRAY);
 }
